@@ -1,0 +1,36 @@
+#!/bin/sh
+
+url="https://github.com/subkeen/subkeen.tar.gz"
+
+if ! curl -OL "$url"; then
+    if ! curl -OL "https://ghfast.top/$url"; then
+        echo "Ошибка: не удалось загрузить subkeen.tar.gz"
+        exit 1
+    fi
+fi
+
+tar -xvzf subkeen.tar.gz -C /opt/sbin > /dev/null
+rm subkeen.tar.gz
+
+if [ "$(id -u)" -ne 0 ]; then
+    echo "Запустите сабкина от root, это нужно чтобы установить python"
+    exit 1
+fi
+
+echo "Устанавливаем python -->"
+opkg update
+opkg install python3 python3-pip -y
+
+SCRIPT_PATH="/opt/sbin/subkeen/subkeen.py"
+
+if [ ! -f "$SCRIPT_PATH" ]; then
+    echo "Файл $SCRIPT_PATH не найден!"
+    exit 1
+fi
+
+echo "Копируем скрипт в /usr/local/bin/subkeen"
+cp "$SCRIPT_PATH" /usr/local/bin/subkeen
+
+chmod +x /usr/local/bin/subkeen
+
+echo "Установка завершена! Введи subkeen -url https://твоя-сабка.ru"
