@@ -21,7 +21,14 @@ echo "Устанавливаем python -->"
 opkg update
 opkg install python3 python3-pip -y
 
-SCRIPT_PATH="/opt/sbin/subkeen/subkeen.py"
+SUBKEEN_DIR=$(find /opt/sbin -maxdepth 1 -type d -name "SubKeen-*" | head -n 1)
+
+if [ -z "$SUBKEEN_DIR" ]; then
+    echo "Ошибка: папка SubKeen не найдена!"
+    exit 1
+fi
+
+SCRIPT_PATH="$SUBKEEN_DIR/subkeen.py"
 
 if [ ! -f "$SCRIPT_PATH" ]; then
     echo "Файл $SCRIPT_PATH не найден!"
