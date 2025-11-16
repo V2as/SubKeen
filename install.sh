@@ -35,9 +35,9 @@ if [ ! -f "$SCRIPT_PATH" ]; then
     exit 1
 fi
 
-echo "Копируем скрипт в /usr/local/bin/subkeen"
-cp "$SCRIPT_PATH" /usr/bin/subkeen
-
-chmod +x /usr/bin/subkeen
+INSTALL_DIR="/usr/local/bin"
+mkdir -p "$INSTALL_DIR"
+cp "$SCRIPT_PATH" "$INSTALL_DIR/subkeen"
+chmod +x "$INSTALL_DIR/subkeen"
 
 echo "Установка завершена! Введи subkeen -url https://твоя-сабка.ru"
