@@ -1,6 +1,6 @@
 #!/bin/sh
 
-url="https://github.com/subkeen/subkeen.tar.gz"
+url="https://github.com/V2as/SubKeen/archive/refs/tags/v.1.0.tar.gz"
 
 if ! curl -OL "$url"; then
     if ! curl -OL "https://ghfast.top/$url"; then
@@ -9,8 +9,8 @@ if ! curl -OL "$url"; then
     fi
 fi
 
-tar -xvzf subkeen.tar.gz -C /opt/sbin > /dev/null
-rm subkeen.tar.gz
+tar -xvzf v.1.0.tar.gz -C /opt/sbin > /dev/null
+rm v.1.0.tar.gz
 
 if [ "$(id -u)" -ne 0 ]; then
     echo "Запустите сабкина от root, это нужно чтобы установить python"
