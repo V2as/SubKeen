@@ -9,7 +9,7 @@ import subprocess
 import os
 import argparse
 import sys
-xkeen_outbound_path = "/etc/xray/configs/04_outbounds.json"
+xkeen_outbound_path = "/opt/etc/xray/configs/04_outbounds.json"
 cron_comment = "# subkeen_cron"
 
 def decode_base64(data: str) -> str:
