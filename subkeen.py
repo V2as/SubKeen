@@ -80,30 +80,39 @@ def parse_xray_url(xray_url: str) -> dict:
         "tag": "vless-reality"
     }
 
+
 def setup_cron(sub_url: str, update_interval: int):
-    # Получаем существующие cron задачи
+    """
+    Добавляет или обновляет cron-задачу, которая выполняет subkeen каждые update_interval часов.
+
+    :param sub_url: URL для передачи в subkeen
+    :param update_interval: интервал в часах
+    """
+    # 1. Получаем текущие записи crontab
     result = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
     lines = result.stdout.splitlines() if result.returncode == 0 else []
 
-    # Убираем старую задачу с этим комментарием
+    # 2. Удаляем старые строки с нашим комментарием
     lines = [line for line in lines if cron_comment not in line]
 
-    # Формируем новую задачу
+    # 3. Формируем новую строку для cron
     hours = update_interval
+    # Используем команду subkeen вместо python скрипта
     cron_cmd = f"0 */{hours} * * * subkeen -url {sub_url} {cron_comment}"
     lines.append(cron_cmd)
-    cron_text = "\n".join(lines) + "\n"
 
-    # Создаем временный файл и обновляем crontab
+    # 4. Сохраняем все строки в временный файл
+    cron_text = "\n".join(lines) + "\n"
     temp_file = "/tmp/cron_temp.txt"
     with open(temp_file, "w") as f:
         f.write(cron_text)
 
+    # 5. Обновляем crontab
     proc = subprocess.run(["crontab", temp_file])
     if proc.returncode == 0:
-        print(f"Cron set to update every {update_interval} hours.")
+        print(f"Cron успешно установлен: обновление каждые {update_interval} часов.")
     else:
-        print("Failed to update cron.")
+        print("Не удалось обновить cron.")
 
 def update_xkeen_outbounds(sub_url: str):
     black_list = {"vless-reality"}
