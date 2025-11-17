@@ -28,18 +28,20 @@ if [ -z "$SUBKEEN_DIR" ]; then
     exit 1
 fi
 
-SCRIPT_PATH="$SUBKEEN_DIR/subkeen.py"
+ln -sfn "$SUBKEEN_DIR" /opt/sbin/SubKeen-current
 
-if [ ! -f "$SCRIPT_PATH" ]; then
-    echo "Файл $SCRIPT_PATH не найден!"
-    exit 1
+mkdir -p /opt/bin
+
+WRAPPER="/opt/bin/subkeen"
+echo "#!/bin/sh" > "$WRAPPER"
+echo "python3 /opt/sbin/SubKeen-current/subkeen.py \"\$@\"" >> "$WRAPPER"
+chmod +x "$WRAPPER"
+
+echo "Установка завершена!"
+
+if ! echo "$PATH" | grep -q "/opt/bin"; then
+    echo "export PATH=\$PATH:/opt/bin" >> ~/.profile
+    echo "Добавьте /opt/bin в PATH или перезайдите в терминал"
 fi
-
-# Копируем скрипт в writable каталог и делаем его исполняемым
-INSTALL_DIR="/usr/local/bin"
-mkdir -p "$INSTALL_DIR"
-echo "#!/bin/sh" > "$INSTALL_DIR/subkeen"
-echo "python3 $SCRIPT_PATH \"\$@\"" >> "$INSTALL_DIR/subkeen"
-chmod +x "$INSTALL_DIR/subkeen"
 
 echo "Установка завершена! Введи subkeen -url https://твоя-сабка.ru"
