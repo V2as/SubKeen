@@ -120,6 +120,8 @@ def update_xkeen_outbounds(sub_url: str):
     except subprocess.CalledProcessError as e:
         print(f"Ошибка при перезапуске xkeen: {e}")
 
+    setup_cron(sub_url, update_interval)
+
 def main():
     parser = argparse.ArgumentParser(
         description="сабкин) добавляй свою подписку в xkeen"
