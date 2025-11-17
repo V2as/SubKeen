@@ -81,16 +81,21 @@ def parse_xray_url(xray_url: str) -> dict:
     }
 
 def setup_cron(sub_url: str, update_interval: int):
+    # Получаем существующие cron задачи
     result = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
     lines = result.stdout.splitlines() if result.returncode == 0 else []
+
+    # Убираем старую задачу с этим комментарием
     lines = [line for line in lines if cron_comment not in line]
 
+    # Формируем новую задачу
     hours = update_interval
     cron_cmd = f"0 */{hours} * * * /usr/bin/python3 {os.path.abspath(__file__)} -url {sub_url} {cron_comment}"
     lines.append(cron_cmd)
     cron_text = "\n".join(lines) + "\n"
 
-    proc = subprocess.run(["crontab"], input=cron_text, text=True)
+    # Обновляем crontab
+    proc = subprocess.run(["crontab", "-"], input=cron_text, text=True)
     if proc.returncode == 0:
         print(f"Cron set to update every {update_interval} hours.")
     else:
