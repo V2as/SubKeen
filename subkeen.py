@@ -81,12 +81,10 @@ def parse_xray_url(xray_url: str) -> dict:
     }
 
 def setup_cron(sub_url: str, update_interval: int):
-    # Удаляем старый cron
     result = subprocess.run(["crontab", "-l"], capture_output=True, text=True)
     lines = result.stdout.splitlines() if result.returncode == 0 else []
     lines = [line for line in lines if cron_comment not in line]
 
-    # Добавляем новый cron
     hours = update_interval
     cron_cmd = f"0 */{hours} * * * /usr/bin/python3 {os.path.abspath(__file__)} -url {sub_url} {cron_comment}"
     lines.append(cron_cmd)
@@ -116,6 +114,11 @@ def update_xkeen_outbounds(sub_url: str):
     with open(xkeen_outbound_path, 'w') as file:
         file.write(json.dumps(outbound_data, indent=4))
 
+    try:
+        subprocess.run(["xkeen", "-restart"], check=True)
+        print("xkeen успешно перезапущен.")
+    except subprocess.CalledProcessError as e:
+        print(f"Ошибка при перезапуске xkeen: {e}")
 
 def main():
     parser = argparse.ArgumentParser(
