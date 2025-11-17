@@ -90,7 +90,7 @@ def setup_cron(sub_url: str, update_interval: int):
 
     # Формируем новую задачу
     hours = update_interval
-    cron_cmd = f"0 */{hours} * * * /usr/bin/python3 {os.path.abspath(__file__)} -url {sub_url} {cron_comment}"
+    cron_cmd = f"0 */{hours} * * * subkeen -url {sub_url} {cron_comment}"
     lines.append(cron_cmd)
     cron_text = "\n".join(lines) + "\n"
 
