@@ -67,10 +67,10 @@ def parse_xray_url(xray_url: str) -> dict:
         "streamSettings" : {
             "network": queryData["type"][0],
             securitySettingsName : {
-                "fingerprint": queryData["fp"],
-                "publicKey": queryData["pbk"],
-                "serverName": queryData["sni"],
-                "shortId": queryData["sid"]
+                "fingerprint": queryData["fp"][0],
+                "publicKey": queryData["pbk"][0],
+                "serverName": queryData["sni"][0],
+                "shortId": queryData["sid"][0]
             },
             "security": queryData["security"][0],
             connectSettingsName : {
