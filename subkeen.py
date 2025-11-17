@@ -94,8 +94,12 @@ def setup_cron(sub_url: str, update_interval: int):
     lines.append(cron_cmd)
     cron_text = "\n".join(lines) + "\n"
 
-    # Обновляем crontab
-    proc = subprocess.run(["crontab", "-"], input=cron_text, text=True)
+    # Создаем временный файл и обновляем crontab
+    temp_file = "/tmp/cron_temp.txt"
+    with open(temp_file, "w") as f:
+        f.write(cron_text)
+
+    proc = subprocess.run(["crontab", temp_file])
     if proc.returncode == 0:
         print(f"Cron set to update every {update_interval} hours.")
     else:
