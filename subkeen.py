@@ -36,14 +36,33 @@ def parse_xray_url(xray_url: str) -> dict:
     default_url = xray_url.replace("vless://", "http://", 1)
     urlData = urlparse(default_url)
     queryData = parse_qs(urlData.query)
-    if queryData["security"][0] == "reality":
+    security = queryData["security"][0]
+    if security == "reality":
         securitySettingsName = "realitySettings"
     else:
         securitySettingsName = "realitySettings"
-    if queryData["type"][0] == "tcp":
+
+    network = queryData["type"][0]
+
+    if network == "tcp":
         connectSettingsName = "tcpSettings"
+        connectSettingsData = {}
+
+    elif network == "xhttp":
+        connectSettingsName = "xhttpSettings"
+        connectSettingsData = {"path": queryData["path"][0]}
+
+    elif network == "grpc":
+        connectSettingsName = "grpcSettings"
+        connectSettingsData = {}
+
+    elif network == "ws":
+        connectSettingsName = "wsSettings"
+        connectSettingsData = {"path": queryData["path"][0]}
+
     else:
         connectSettingsName = "tcpSettings"
+        connectSettingsData = {}
 
     protocol = xray_url.split('://')[0]
 
@@ -73,9 +92,7 @@ def parse_xray_url(xray_url: str) -> dict:
                 "shortId": queryData["sid"][0]
             },
             "security": queryData["security"][0],
-            connectSettingsName : {
-
-            }
+            connectSettingsName : connectSettingsData
         },
         "tag": "vless-reality"
     }
