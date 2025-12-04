@@ -1,11 +1,19 @@
-Установка или обновление 
+## Установка или обновление, вводить в командную строку keenetic в OpenWRT
+
+1) Скачать скрипт установки
 
 ``curl -sOfL https://raw.githubusercontent.com/V2as/SubKeen/main/install.sh``
 
+2) Дать права на выполнения 
+
 ``chmod +x ./install.sh``
+
+3) Выполнить
 
 ``./install.sh``
 
-Использование
+**С помощью этого скрипта ``./install.sh`` можно обновлять версию subkeen**
+
+## Использование
 
 ``subkeen -url https://your-sub-url.paste``

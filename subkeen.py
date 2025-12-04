@@ -39,9 +39,36 @@ def parse_xray_url(xray_url: str) -> dict:
     security = queryData["security"][0]
     if security == "reality":
         securitySettingsName = "realitySettings"
+        securitySettingsData = {
+                "fingerprint": queryData["fp"][0],
+                "publicKey": queryData["pbk"][0],
+                "serverName": queryData["sni"][0],
+                "shortId": queryData["sid"][0]
+            }
+    elif security == "tls":
+        securitySettingsName = "tlsSettings"
+        tlsSettingsData = {}
+
+        if "serverName" in queryData: tlsSettingsData["serverName"] = queryData["serverName"][0]
+        if "alpn" in queryData: tlsSettingsData["alpn"] = queryData["alpn"][0]
+        if "minVersion" in queryData: tlsSettingsData["minVersion"] = queryData["minVersion"][0]
+        if "maxVersion" in queryData: tlsSettingsData["maxVersion"] = queryData["maxVersion"][0]
+        if "cipherSuites" in queryData: tlsSettingsData["cipherSuites"] = queryData["cipherSuites"][0]
+        if "certificates" in queryData: tlsSettingsData["certificates"] = queryData["certificates"][0]
+        if "disableSessionResumption" in queryData: tlsSettingsData["disableSessionResumption"] = queryData["disableSessionResumption"][0].lower() == "true"
+        if "disableSystemRoot" in queryData: tlsSettingsData["disableSystemRoot"] = queryData["disableSystemRoot"][0].lower() == "true"
+        if "disableOCSPStapling" in queryData: tlsSettingsData["disableOCSPStapling"] = queryData["disableOCSPStapling"][0].lower() == "true"
+        if "allowInsecure" in queryData: tlsSettingsData["allowInsecure"] = queryData["allowInsecure"][0].lower() == "true"
+        if "rejectedHandshake" in queryData: tlsSettingsData["rejectedHandshake"] = queryData["rejectedHandshake"][0]
+        if "psk" in queryData: tlsSettingsData["psk"] = queryData["psk"][0]
     else:
         securitySettingsName = "realitySettings"
-
+        securitySettingsData = {
+            "fingerprint": queryData["fp"][0],
+            "publicKey": queryData["pbk"][0],
+            "serverName": queryData["sni"][0],
+            "shortId": queryData["sid"][0]
+        }
     network = queryData["type"][0]
 
     if network == "tcp":
@@ -85,12 +112,7 @@ def parse_xray_url(xray_url: str) -> dict:
         },
         "streamSettings" : {
             "network": queryData["type"][0],
-            securitySettingsName : {
-                "fingerprint": queryData["fp"][0],
-                "publicKey": queryData["pbk"][0],
-                "serverName": queryData["sni"][0],
-                "shortId": queryData["sid"][0]
-            },
+            securitySettingsName : securitySettingsData,
             "security": queryData["security"][0],
             connectSettingsName : connectSettingsData
         },
@@ -163,6 +185,7 @@ def main():
     )
     parser.add_argument("-url", type=str, help="URL подписки Xray VLESS/REALITY")
     parser.add_argument("--version", action="store_true", help="Показать версию")
+    parser.add_argument("--update", action="store_true", help="Обновить сабкин (не работает)")
 
     args = parser.parse_args()
 
@@ -171,6 +194,7 @@ def main():
         sys.exit(0)
     if args.url:
         update_xkeen_outbounds(args.url)
+
     else:
         parser.print_help()
         sys.exit(1)
