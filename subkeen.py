@@ -97,7 +97,9 @@ def parse_xray_url(xray_url: str) -> dict:
     elif network == "ws":
         connectSettingsName = "wsSettings"
 
-        connectSettingsData = {"path": "\\"+queryData["path"][0]}
+        connectSettingsData = {
+            "host": queryData["host"][0],
+            "path": "\\"+queryData["path"][0]}
 
     else:
         connectSettingsName = "tcpSettings"
