@@ -51,7 +51,7 @@ def parse_xray_url(xray_url: str) -> dict:
         tlsSettingsData = {}
 
         if "serverName" in queryData: tlsSettingsData["serverName"] = queryData["serverName"][0]
-        if "sni" in queryData: tlsSettingsData["sni"] = queryData["sni"][0]
+        if "sni" in queryData: tlsSettingsData["serverName"] = queryData["sni"][0]
         if "alpn" in queryData: tlsSettingsData["alpn"] = queryData["alpn"][0]
         if "minVersion" in queryData: tlsSettingsData["minVersion"] = queryData["minVersion"][0]
         if "maxVersion" in queryData: tlsSettingsData["maxVersion"] = queryData["maxVersion"][0]
@@ -96,7 +96,8 @@ def parse_xray_url(xray_url: str) -> dict:
 
     elif network == "ws":
         connectSettingsName = "wsSettings"
-        connectSettingsData = {"path": queryData["path"][0]}
+
+        connectSettingsData = {"path": "\\"+queryData["path"][0]}
 
     else:
         connectSettingsName = "tcpSettings"
