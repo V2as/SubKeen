@@ -37,6 +37,7 @@ def parse_xray_url(xray_url: str) -> dict:
     urlData = urlparse(default_url)
     queryData = parse_qs(urlData.query)
     security = queryData["security"][0]
+
     if security == "reality":
         securitySettingsName = "realitySettings"
         securitySettingsData = {
@@ -61,6 +62,7 @@ def parse_xray_url(xray_url: str) -> dict:
         if "allowInsecure" in queryData: tlsSettingsData["allowInsecure"] = queryData["allowInsecure"][0].lower() == "true"
         if "rejectedHandshake" in queryData: tlsSettingsData["rejectedHandshake"] = queryData["rejectedHandshake"][0]
         if "psk" in queryData: tlsSettingsData["psk"] = queryData["psk"][0]
+        securitySettingsData = tlsSettingsData
     else:
         securitySettingsName = "realitySettings"
         securitySettingsData = {
@@ -92,8 +94,8 @@ def parse_xray_url(xray_url: str) -> dict:
         connectSettingsData = {}
 
     protocol = xray_url.split('://')[0]
-
-    return {
+    print(queryData, urlData)
+    cfg = {
         "protocol": protocol,
         "settings": {
             "vnext": [
@@ -103,7 +105,7 @@ def parse_xray_url(xray_url: str) -> dict:
                     "users": [
                         {
                             "encryption": "none",
-                            "flow": queryData["flow"][0],
+
                             "id": urlData.username
                         }
                     ]
@@ -118,7 +120,11 @@ def parse_xray_url(xray_url: str) -> dict:
         },
         "tag": "vless-reality"
     }
+    try:
+        cfg["settings"]["vnext"][0]["users"][0]["flow"] = queryData["flow"][0]
+    except: pass
 
+    return cfg
 
 def setup_cron(sub_url: str, update_interval: int):
     """
@@ -159,25 +165,25 @@ def update_xkeen_outbounds(sub_url: str):
     xray_url, update_interval = parse_xray_sub(sub_url)
     xrayData = parse_xray_url(xray_url)
 
-    with open(xkeen_outbound_path, 'r') as file:
-        outbound_data = json.load(file)
-
-    outbound_data["outbounds"] = [
-        obj for obj in outbound_data['outbounds']
-        if obj.get('tag') not in black_list
-    ]
-    outbound_data["outbounds"].append(xrayData)
-
-    with open(xkeen_outbound_path, 'w') as file:
-        file.write(json.dumps(outbound_data, indent=4))
-
-    try:
-        subprocess.run(["xkeen", "-restart"], check=True)
-        print("xkeen успешно перезапущен.")
-    except subprocess.CalledProcessError as e:
-        print(f"Ошибка при перезапуске xkeen: {e}")
-
-    setup_cron(sub_url, update_interval)
+    # with open(xkeen_outbound_path, 'r') as file:
+    #     outbound_data = json.load(file)
+    #
+    # outbound_data["outbounds"] = [
+    #     obj for obj in outbound_data['outbounds']
+    #     if obj.get('tag') not in black_list
+    # ]
+    # outbound_data["outbounds"].append(xrayData)
+    #
+    # with open(xkeen_outbound_path, 'w') as file:
+    #     file.write(json.dumps(outbound_data, indent=4))
+    #
+    # try:
+    #     subprocess.run(["xkeen", "-restart"], check=True)
+    #     print("xkeen успешно перезапущен.")
+    # except subprocess.CalledProcessError as e:
+    #     print(f"Ошибка при перезапуске xkeen: {e}")
+    #
+    # setup_cron(sub_url, update_interval)
 
 def main():
     parser = argparse.ArgumentParser(
