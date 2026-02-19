@@ -1,31 +1,36 @@
 ## Сабкин
 
-Этот инструмент помогает совместить работу вашей v2ray подобной подписки с xkeen
+Этот инструмент помогает совместить работу вашей v2ray подобной подписки с XKeen
 
 Отлично работает с подписками https://blacktemple.online (не реклама, просто тестирую именно на них)
-
-## Установка или обновление, вводить в командную строку keenetic в OpenWRT
+___
+## Установка/обновление
 
 1) Скачать скрипт установки
 
-``curl -sOfL https://raw.githubusercontent.com/V2as/SubKeen/main/install.sh``
+```
+curl -sOfL https://raw.githubusercontent.com/V2as/SubKeen/main/install.sh
+```
 
 2) Дать права на выполнения 
 
-``chmod +x ./install.sh``
+```
+chmod +x ./install.sh
+```
 
 3) Выполнить
 
-``./install.sh``
+```
+./install.sh
+```
 
-**С помощью этого скрипта ``./install.sh`` можно обновлять версию subkeen, пропал скрипт? Просто можно сделать те же действия, что при установке!**
+4) Использовать
 
-## Использование
+```
+subkeen -url https://ваш-ключ-ссылка.blacktunnel.net/
+```
 
-``subkeen -url https://your-sub-url.paste``
+Подписка будет обновляться по ссылке, которую вы указали
 
-или же просто ввести subkeen и увидеть меню команд
-
-я буду продолжать разработку этого сервиса только если буду видеть отдачу в моём ТГ
-
-https://t.me/helpdeskvpn
+Вопрос можно задать тут: https://t.me/helpdeskvpn
+Инструкция XKeen от комьюнити: https://github.com/Corvus-Malus/XKeen
