@@ -99,7 +99,7 @@ def parse_xray_url(xray_url: str) -> dict:
 
         connectSettingsData = {
             "host": queryData["host"][0],
-            "path": "\\"+queryData["path"][0]}
+            "path": queryData["path"][0]}
 
     else:
         connectSettingsName = "tcpSettings"
