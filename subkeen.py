@@ -165,25 +165,25 @@ def update_xkeen_outbounds(sub_url: str):
     xray_url, update_interval = parse_xray_sub(sub_url)
     xrayData = parse_xray_url(xray_url)
 
-    # with open(xkeen_outbound_path, 'r') as file:
-    #     outbound_data = json.load(file)
-    #
-    # outbound_data["outbounds"] = [
-    #     obj for obj in outbound_data['outbounds']
-    #     if obj.get('tag') not in black_list
-    # ]
-    # outbound_data["outbounds"].append(xrayData)
-    #
-    # with open(xkeen_outbound_path, 'w') as file:
-    #     file.write(json.dumps(outbound_data, indent=4))
-    #
-    # try:
-    #     subprocess.run(["xkeen", "-restart"], check=True)
-    #     print("xkeen успешно перезапущен.")
-    # except subprocess.CalledProcessError as e:
-    #     print(f"Ошибка при перезапуске xkeen: {e}")
-    #
-    # setup_cron(sub_url, update_interval)
+    with open(xkeen_outbound_path, 'r') as file:
+        outbound_data = json.load(file)
+
+    outbound_data["outbounds"] = [
+        obj for obj in outbound_data['outbounds']
+        if obj.get('tag') not in black_list
+    ]
+    outbound_data["outbounds"].append(xrayData)
+
+    with open(xkeen_outbound_path, 'w') as file:
+        file.write(json.dumps(outbound_data, indent=4))
+
+    try:
+        subprocess.run(["xkeen", "-restart"], check=True)
+        print("xkeen успешно перезапущен.")
+    except subprocess.CalledProcessError as e:
+        print(f"Ошибка при перезапуске xkeen: {e}")
+
+    setup_cron(sub_url, update_interval)
 
 def main():
     parser = argparse.ArgumentParser(
