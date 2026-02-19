@@ -51,6 +51,7 @@ def parse_xray_url(xray_url: str) -> dict:
         tlsSettingsData = {}
 
         if "serverName" in queryData: tlsSettingsData["serverName"] = queryData["serverName"][0]
+        if "sni" in queryData: tlsSettingsData["sni"] = queryData["sni"][0]
         if "alpn" in queryData: tlsSettingsData["alpn"] = queryData["alpn"][0]
         if "minVersion" in queryData: tlsSettingsData["minVersion"] = queryData["minVersion"][0]
         if "maxVersion" in queryData: tlsSettingsData["maxVersion"] = queryData["maxVersion"][0]
@@ -62,6 +63,14 @@ def parse_xray_url(xray_url: str) -> dict:
         if "allowInsecure" in queryData: tlsSettingsData["allowInsecure"] = queryData["allowInsecure"][0].lower() == "true"
         if "rejectedHandshake" in queryData: tlsSettingsData["rejectedHandshake"] = queryData["rejectedHandshake"][0]
         if "psk" in queryData: tlsSettingsData["psk"] = queryData["psk"][0]
+        if tlsSettingsData == {}:
+            tlsSettingsData = {
+
+  "allowInsecure": False,
+  "alpn": [
+            "http/1.1"
+          ]
+}
         securitySettingsData = tlsSettingsData
     else:
         securitySettingsName = "realitySettings"
